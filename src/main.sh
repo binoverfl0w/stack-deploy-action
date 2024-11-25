@@ -60,5 +60,20 @@ if [ -n "${INPUT_ENV_FILE}" ];then
     # export ENV_FILE="${INPUT_ENV_FILE}"
 fi
 
-echo -e "\u001b[36mDeploying Stack: \u001b[37;1m${INPUT_NAME}"
-docker stack deploy -c "${INPUT_FILE}" "${INPUT_NAME}"
+if [ -n "${INPUT_REGISTRY_USERNAME}" ];then
+    echo -e "\u001b[36mAuthenticating to registry."
+    echo "${INPUT_REGISTRY_PASSWORD}" > password
+    docker login -u "${INPUT_REGISTRY_USERNAME}" --password-stdin < password || {
+        rm -f password
+        exit 1
+    }
+    rm -f password
+fi
+
+if [ -n "${INPUT_REGISTRY_USERNAME}" ];then
+    echo -e "\u001b[36mDeploying Stack: \u001b[37;1m${INPUT_NAME}"
+    docker stack deploy -c "${INPUT_FILE}" "${INPUT_NAME}" --with-registry-auth
+else
+    echo -e "\u001b[36mDeploying Stack: \u001b[37;1m${INPUT_NAME}"
+    docker stack deploy -c "${INPUT_FILE}" "${INPUT_NAME}"
+fi

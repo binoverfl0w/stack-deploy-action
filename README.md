@@ -20,16 +20,18 @@ For more details see [action.yaml](action.yaml) and [src/main.sh](src/main.sh).
 
 ## Inputs
 
-| input    | required | default               | description               |
-| -------- | -------- | --------------------- | ------------------------- |
-| host     | **Yes**  | -                     | Remote Docker hostname    |
-| port     | No       | `22`                  | Remote Docker port        |
-| user     | **Yes**  | -                     | Remote Docker username    |
-| pass     | No       | -                     | Remote Docker password \* |
-| ssh_key  | No       | -                     | Remote SSH Key file \*    |
-| file     | No       | `docker-compose.yaml` | Docker Compose file       |
-| name     | **Yes**  | -                     | Docker Stack name         |
-| env_file | No       | -                     | Docker Environment file   |
+| input             | required | default               | description                                                                      |
+| ----------------- | -------- | --------------------- | -------------------------------------------------------------------------------- |
+| host              | **Yes**  | -                     | Remote Docker hostname                                                           |
+| port              | No       | `22`                  | Remote Docker port                                                               |
+| user              | **Yes**  | -                     | Remote Docker username                                                           |
+| pass              | No       | -                     | Remote Docker password \*                                                        |
+| ssh_key           | No       | -                     | Remote SSH Key file \*                                                           |
+| file              | No       | `docker-compose.yaml` | Docker Compose file                                                              |
+| name              | **Yes**  | -                     | Docker Stack name                                                                |
+| env_file          | No       | -                     | Docker Environment file                                                          |
+| registry_username | No       | -                     | The username for authenticating with your Docker registry.                       |
+| registry_password | No       | -                     | The password (or token) associated with the REGISTRY_USERNAME for Docker login.  |
 
 **pass/ssh_key** - You must provide either a `pass` or `ssh_key`
 
@@ -138,6 +140,8 @@ jobs:
           ssh_key: '${{ secrets.DOCKER_SSH_KEY }}'
           file: 'docker-compose-swarm.yaml'
           name: 'stack-name'
+          registry_username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          registry_password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 ```
 
 # Support
